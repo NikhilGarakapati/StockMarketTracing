@@ -2,13 +2,6 @@ import React, {Component} from 'react';
 //import {iex} from '../config/iex';
 import {stock} from '../resources/stock';
 
-const changeStyle = {
-    color: '#006400',
-    fontSize: '0.8rem',
-    marginLeft: 5
-  }
-  
-
 class StockRow extends Component{
 
     constructor(props){
@@ -17,17 +10,38 @@ class StockRow extends Component{
             price: null,
             date: null,
             time: null,
-            dollar_change: 0,
+            dollar_change: null,
             percent_change: null
         }
     }
 
+    changeStyle() {
+        var color;
+        if(this.state.dollar_change > 0) color = '#006400';
+        else color = '#FF0000';
+        return {
+            color: color,
+            fontSize: '0.8rem',
+            marginLeft: 5
+        }
+    }
+      
     applyData(data){
         console.log(data)
         this.setState({
             price: data.price,
             date: data.date,
             time: data.time
+        });
+        stock.getYesterdaysClose(this.props.ticker, data.date , (yesterday)=>{
+            console.log(this.props.ticker, yesterday);
+            const dollar_change = (data.price - yesterday.price).toFixed(2);
+            const percent_change = (100 *  dollar_change / yesterday.price).toFixed(2);
+            this.setState({
+
+                dollar_change: `${dollar_change}`,
+                percent_change: `(${percent_change}%)`          
+            })
         })
     }
 
@@ -40,7 +54,7 @@ class StockRow extends Component{
         return(
             <li className="list-group-item">
                 <b>{this.props.ticker}</b> ${this.state.price}
-                <span className= "change" style={changeStyle}>
+                <span className= "change" style={this.changeStyle()}>
                     {this.state.dollar_change}
                     {this.state.percent_change}
                 </span>

@@ -2,18 +2,32 @@ import React, {Component} from 'react';
 //import {iex} from '../config/iex';
 import {stock} from '../resources/stock';
 
+const changeStyle = {
+    color: '#006400',
+    fontSize: '0.8rem',
+    marginLeft: 5
+  }
+  
+
 class StockRow extends Component{
 
     constructor(props){
         super(props)
         this.state = {
-            data: {}
+            price: null,
+            date: null,
+            time: null,
+            dollar_change: 0,
+            percent_change: null
         }
     }
 
     applyData(data){
+        console.log(data)
         this.setState({
-            data: data[data.length -1]
+            price: data.price,
+            date: data.date,
+            time: data.time
         })
     }
 
@@ -24,12 +38,13 @@ class StockRow extends Component{
 
     render(){
         return(
-            <tr>
-                <td>{this.props.ticker}</td>
-                <td>{this.state.data.close}</td>
-                <td>{this.state.data.date}</td>
-                <td>{this.state.data.label}</td>
-            </tr>
+            <li className="list-group-item">
+                <b>{this.props.ticker}</b> ${this.state.price}
+                <span className= "change" style={changeStyle}>
+                    {this.state.dollar_change}
+                    {this.state.percent_change}
+                </span>
+            </li>
         )
     } 
 }

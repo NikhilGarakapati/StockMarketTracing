@@ -25,16 +25,34 @@ export const stock = {
     },
 
     getYesterdaysClose:(ticker, date, callback) =>{
-        const url = stock.getYesterdaysCloseURL(ticker, date);
-        fetch(url)
-            .then((response) => response.json())
-            .then((data) => callback(stock.formatPriceData(data)))
-            .catch(err => console.log(err));
+
+        stock.getLastTradingDate(date).then((data) => {
+            const url = stock.getYesterdaysCloseURL(ticker, data[0].date)
+            fetch(url)
+                .then((response) => response.json())
+                .then((data) => callback(stock.formatPriceData(data)))
+                .catch(err => console.log(err));
+        })    
     },
 
-    getYesterdaysCloseURL: (ticker) =>{
-        return `${iex.url}/stock/${ticker}/intraday-prices?exactDate=20190501&token=${iex.token}`
+    getLastTradingDate: (date) => {
+        var today = stock.formatDate(date);
 
+        const url =  `${iex.url}/ref-data/us/dates/trade/last/1/${today}?token=${iex.token}`;
+
+        return fetch(url)
+            .then((response) => response.json())
+        
+    },
+
+    getYesterdaysCloseURL: (ticker, date) =>{
+        var lastTradingDate = stock.formatDate(date);
+        return `${iex.url}/stock/${ticker}/intraday-prices?exactDate=${lastTradingDate}&token=${iex.token}`
+    },
+
+    // Date format YYYY-MM-DD
+
+    formatDate:(date) => {
+        return new Date(date).toISOString().split('T')[0].replace(/-/g, '');
     }
-
 }

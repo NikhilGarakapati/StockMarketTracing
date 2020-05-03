@@ -11,9 +11,10 @@ function App() {
       <div className= "container">
         <div className = "col-md-5 mt-5">
           <div className = "card">
-            <ul class="list-group list-group-flush">
+            <ul className="list-group list-group-flush">
               <StockRow ticker = "abt" />
-              <StockRow ticker = "goog" />
+              <StockRow ticker = "grub"/>
+              <StockRow ticker = "googl" />
               <StockRow ticker = "msft" />
               <StockRow ticker = "tsla" />
             </ul>

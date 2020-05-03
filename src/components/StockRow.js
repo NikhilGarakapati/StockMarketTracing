@@ -27,9 +27,11 @@ class StockRow extends Component{
     }
       
     applyData(data){
-        console.log(data)
+
+        const formattedPrice = (data.price === undefined) ? null : data.price.toFixed(2)
+
         this.setState({
-            price: data.price,
+            price: formattedPrice,
             date: data.date,
             time: data.time
         });

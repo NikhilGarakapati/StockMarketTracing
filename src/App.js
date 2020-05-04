@@ -2,7 +2,7 @@ import React from 'react';
 // import logo from './logo.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import StockRow from './components/StockRow';
+import StockList from './components/StockList'
 
 
 function App() {
@@ -11,13 +11,7 @@ function App() {
       <div className= "container">
         <div className = "col-md-5 mt-5">
           <div className = "card">
-            <ul className="list-group list-group-flush">
-              <StockRow ticker = "abt" />
-              <StockRow ticker = "grub"/>
-              <StockRow ticker = "googl" />
-              <StockRow ticker = "msft" />
-              <StockRow ticker = "tsla" />
-            </ul>
+            <StockList />
           </div>
         </div>
       </div>

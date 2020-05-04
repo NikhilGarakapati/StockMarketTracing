@@ -35,22 +35,36 @@ class StockRow extends Component{
             date: data.date,
             time: data.time
         });
-        stock.getYesterdaysClose(this.props.ticker, data.date , (yesterday)=>{
-            console.log(this.props.ticker, yesterday);
-            const dollar_change = (data.price - yesterday.price).toFixed(2);
-            const percent_change = (100 *  dollar_change / yesterday.price).toFixed(2);
-            this.setState({
-
-                dollar_change: `${dollar_change}`,
-                percent_change: `(${percent_change}%)`          
-            })
-        })
     }
 
     componentDidMount(){
         // quering the API
         stock.latestPrice(this.props.ticker , this.applyData.bind(this))
     }
+
+    componentDidUpdate(prevProps){
+        if(prevProps.lastTradingDate == null && this.props.lastTradingDate != null){
+            this.setState({
+                canSetClose: true
+            })
+        }
+
+        if(this.state.canSetClose && this.state.price != null){
+        stock.getYesterdaysClose(this.props.ticker, this.props.lastTradingDate , (yesterday)=>{
+            const dollar_change = (this.state.price - yesterday.price).toFixed(2);
+            const percent_change = (100 *  dollar_change / yesterday.price).toFixed(2);
+            this.setState({
+
+                dollar_change: `${dollar_change}`,
+                percent_change: `(${percent_change}%)`  , 
+                canSetClose: false       // to stop calling the api real
+            })
+        })
+    }
+    }
+
+    
+
 
     render(){
         return(
@@ -67,4 +81,4 @@ class StockRow extends Component{
 
 
 
-export default StockRow;
+export default StockRow;  
